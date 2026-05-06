@@ -5,7 +5,8 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/Ankit-0395/devops'
+                git branch: 'main',
+                url: 'https://github.com/Ankit-0395/devops.git'
             }
         }
 
@@ -23,7 +24,7 @@ pipeline {
                 docker run -d \
                 --name html-container \
                 -p 80:80 \
-                -v $WORKSPACE:/usr/share/nginx/html:ro \
+                -v $WORKSPACE/html:/usr/share/nginx/html:ro \
                 nginx
                 '''
             }

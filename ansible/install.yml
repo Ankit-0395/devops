@@ -1,0 +1,45 @@
+---
+- name: Install Docker and Required Packages
+  hosts: web
+  become: true
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    # ---------------- DOCKER ---------------- #
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    # ---------------- JAVA ---------------- #
+
+    - name: Install Java
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    # ---------------- REQUIRED TOOLS ---------------- #
+
+    - name: Install curl and wget
+      apt:
+        name:
+          - curl
+          - wget
+        state: present

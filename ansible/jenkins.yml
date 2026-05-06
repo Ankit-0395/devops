@@ -1,0 +1,42 @@
+---
+- name: Install Jenkins
+  hosts: web
+  become: true
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Install curl wget gnupg
+      apt:
+        name:
+          - curl
+          - wget
+          - gnupg
+        state: present
+
+    - name: Download Jenkins package
+      get_url:
+       url: https://pkg.jenkins.io/debian-stable/binary/jenkins_2.504.1_all.deb
+       dest: /tmp/jenkins.deb
+
+    - name: Install Jenkins package
+      apt:
+        deb: /tmp/jenkins.deb
+
+    - name: Fix dependencies
+      shell: |
+        apt --fix-broken install -y
+
+    - name: Start Jenkins service
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
